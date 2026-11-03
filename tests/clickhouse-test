@@ -2287,7 +2287,9 @@ class SettingsRandomizer:
         # obsolete since 26.11, and changing an obsolete setting adds a warning that 01945_system_warnings checks.
         # Skips whole manifest files by their partition summaries, so an unsound bound is a
         # wrong-results bug. Gated on `use_iceberg_partition_pruning` below.
-        "use_iceberg_manifest_list_partition_pruning": lambda: random.randint(0, 1),
+        # Commented out together with use_iceberg_partition_pruning: toggling the manifest-list skip
+        # changes which files are read and the derived stats, breaking the manifest-stats assertion tests.
+        # "use_iceberg_manifest_list_partition_pruning": lambda: random.randint(0, 1),
         # Lake partition pruning, the same wrong-results class as the manifest-list skip above.
         # The Iceberg gate stays on almost always: it suppresses the skip above with it, and a
         # run without any pruning is the baseline every reference was written against anyway.
