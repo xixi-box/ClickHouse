@@ -5,6 +5,8 @@ SET optimize_and_compare_chain = 1;
 -- Pinned (randomized in CI): a tiny work budget stops deriving the hints the checks below count.
 SET optimize_and_compare_chain_max_hash_work = 5000000;
 SET query_plan_filter_push_down = 1;
+-- Pinned (randomized in CI): with push-down below LIMIT BY off, the derived hint below LIMIT BY does not prune.
+SET query_plan_filter_push_down_below_limit_by = 1;
 SET use_query_condition_cache = 0;
 SET optimize_or_like_chain = 1;
 -- Pinned (randomized in CI): a threshold above 4 keeps the 4-pattern chain below from being rewritten.
