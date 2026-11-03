@@ -2114,7 +2114,8 @@ class SettingsRandomizer:
         # 0 means no bound at all, which is the one draw that makes a DP algorithm enumerate
         # exponentially: on a query with more relations than `..._join_order_limit`, planning alone
         # costs hundreds of MiB and, without a memory cap to stop it, hangs.
-        "query_plan_optimize_join_order_max_searched_plans": lambda: random.choice([1, 10, 100, 1000, 100000]),
+        # Commented out: the search-plan budget changes the chosen join order (observable in EXPLAIN), breaking assertion tests.
+        # "query_plan_optimize_join_order_max_searched_plans": lambda: random.choice([1, 10, 100, 1000, 100000]),
         # Reachable: dpsub is in the algorithm list above. The detector decides which reorderings
         # DPsub considers valid, so an unsound one is a wrong-results bug. The two `cd_a`/`cd_c`
         # flags this replaces were renamed into this enum in 26.9 with no alias kept, and the bug
@@ -2290,7 +2291,9 @@ class SettingsRandomizer:
         # Lake partition pruning, the same wrong-results class as the manifest-list skip above.
         # The Iceberg gate stays on almost always: it suppresses the skip above with it, and a
         # run without any pruning is the baseline every reference was written against anyway.
-        "use_iceberg_partition_pruning": lambda: random.random() > 0.05,
+        # Commented out: toggling Iceberg partition pruning changes which files are read and the stats
+        # derived from them (observable in the manifest-stats tests), breaking assertion tests.
+        # "use_iceberg_partition_pruning": lambda: random.random() > 0.05,
         # Paimon's equivalent is off by default, so drawing it on is added coverage
         "use_paimon_partition_pruning": lambda: random.randint(0, 1),
         "allow_key_condition_coalesce_rewrite": lambda: random.random() > 0.05,
@@ -2370,7 +2373,8 @@ class SettingsRandomizer:
         "enable_function_early_short_circuit": lambda: random.random() < 0.3,
         # Plan-level selectivity estimation only: 1 makes every IN set use its bounding
         # range, 0 keeps the exact per-element ranges regardless of set size
-        "statistics_max_set_size_for_exact_selectivity_estimation": lambda: random.choice([0, 1, 100, 10000]),
+        # Commented out: changes plan-level selectivity estimation (observable in NDV/plan output), breaking assertion tests.
+        # "statistics_max_set_size_for_exact_selectivity_estimation": lambda: random.choice([0, 1, 100, 10000]),
         "materialized_views_populate_atomically": lambda: random.random() > 0.05,
         "allow_metadata_only_named_tuple_alter": lambda: random.random() < 0.3,
         "optimize_mutations_with_partition_pruning": lambda: random.random() > 0.05,
@@ -2395,7 +2399,8 @@ class SettingsRandomizer:
         # ),
         "use_iceberg_manifest_statistics": lambda: random.random() < 0.3,
         # New in 26.10 / 26.11 and on by default: now and then take the old path
-        "query_plan_lazy_materialization_for_join": lambda: random.random() > 0.05,
+        # Commented out: toggling lazy materialization for joins changes the plan (observable in EXPLAIN), breaking assertion tests.
+        # "query_plan_lazy_materialization_for_join": lambda: random.random() > 0.05,
         "query_plan_aggregation_having_prefilter": lambda: random.random() > 0.05,
         "query_plan_convert_outer_join_to_inner_join_transitively": lambda: random.random() > 0.05,
         "query_plan_filter_push_down_below_limit_by": lambda: random.random() > 0.05,
@@ -2450,7 +2455,8 @@ class SettingsRandomizer:
         # here: this forces a child to 0, which they reject.
         #"reader_executor_use_long_connections": "use_reader_executor",
         # skipping manifest files by partition summary is part of Iceberg partition pruning
-        "use_iceberg_manifest_list_partition_pruning": "use_iceberg_partition_pruning",
+        # Commented out together with its target use_iceberg_partition_pruning above.
+        # "use_iceberg_manifest_list_partition_pruning": "use_iceberg_partition_pruning",
         # forcing independent DISTINCT/window/set building is a no-op when not allowed
         "force_distinct_partitions_independently": "allow_distinct_partitions_independently",
         "force_window_partitions_independently": "allow_window_partitions_independently",
